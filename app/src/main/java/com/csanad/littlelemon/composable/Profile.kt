@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.edit
 import androidx.navigation.NavHostController
 import com.csanad.littlelemon.Onboarding
 import com.csanad.littlelemon.R

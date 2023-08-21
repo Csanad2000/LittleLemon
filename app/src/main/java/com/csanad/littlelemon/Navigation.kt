@@ -10,7 +10,7 @@ import com.csanad.littlelemon.composable.Onboarding
 import com.csanad.littlelemon.composable.Profile
 
 @Composable
-fun Navigation(navController: NavHostController, prefs: SharedPreferences) {
+fun Navigation(navController: NavHostController, prefs: SharedPreferences, database: LittleLemonDatabase) {
     NavHost(
         navController = navController,
         startDestination = (if (prefs.getBoolean("logged", false)) Home.route else Onboarding.route)
@@ -19,7 +19,7 @@ fun Navigation(navController: NavHostController, prefs: SharedPreferences) {
             Onboarding(navController, prefs)
         }
         composable(Home.route) {
-            Home(navController)
+            Home(navController, database)
         }
         composable(Profile.route) {
             Profile(navController, prefs)
