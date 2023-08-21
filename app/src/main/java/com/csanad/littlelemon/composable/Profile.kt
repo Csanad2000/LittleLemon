@@ -2,7 +2,6 @@ package com.csanad.littlelemon.composable
 
 import android.content.SharedPreferences
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,35 +16,22 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.navigation.NavHostController
-import com.csanad.littlelemon.Home
+import com.csanad.littlelemon.Onboarding
 import com.csanad.littlelemon.R
 import com.csanad.littlelemon.ui.theme.LittleLemonTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
-    var firstName by remember {
-        mutableStateOf("")
-    }
-    var lastName by remember {
-        mutableStateOf("")
-    }
-    var emailAddress by remember {
-        mutableStateOf("")
-    }
+fun Profile(navController: NavHostController, prefs: SharedPreferences) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -57,13 +43,7 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
                 .fillMaxWidth()
                 .height(100.dp)
                 .padding(20.dp),
-            alignment = Alignment.TopCenter
-        )
-        Text(
-            text = "Let's get to know you", modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.Green)
-                .padding(40.dp), textAlign = TextAlign.Center
+            alignment = Alignment.TopStart
         )
         Column(
             modifier = Modifier
@@ -73,41 +53,39 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
         ) {
             Text(text = "Personal information", modifier = Modifier.padding(vertical = 20.dp))
             TextField(
-                value = firstName,
-                onValueChange = { firstName = it },
+                value = prefs.getString("firstName", "")!!,
+                onValueChange = {},
                 placeholder = { Text(text = "First name") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp)
+                    .padding(vertical = 20.dp),
+                readOnly = true
             )
             TextField(
-                value = lastName,
-                onValueChange = { lastName = it },
+                value = prefs.getString("lastName", "")!!,
+                onValueChange = {},
                 placeholder = { Text(text = "Last name") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 20.dp)
+                    .padding(vertical = 20.dp),
+                readOnly = true
             )
             TextField(
-                value = emailAddress,
-                onValueChange = { emailAddress = it },
+                value = prefs.getString("emailAddress", "")!!,
+                onValueChange = {},
                 placeholder = { Text(text = "Email address") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
+                readOnly = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             Spacer(modifier = Modifier.weight(1.0f))
         }
         Button(
             onClick = {
-                if (firstName.isNotBlank() && lastName.isNotBlank() && emailAddress.isNotBlank()) {
-                    if (prefs.edit().putString("firstName", firstName)
-                            .putString("lastName", lastName).putString("emailAddress", emailAddress)
-                            .putBoolean("logged", true).commit()
-                    )
-                        navController.navigate(Home.route)
-                }
+                if (prefs.edit().clear().commit())
+                    navController.navigate(Onboarding.route)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,14 +94,14 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
                 containerColor = Color.Yellow,
                 contentColor = Color.Black
             )
-        ) { Text(text = "Register") }
+        ) { Text(text = "Log out") }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun OnboardingPreview() {
+fun ProfilePreview() {
     LittleLemonTheme {
-        //Onboarding()
+        //Profile()
     }
 }
