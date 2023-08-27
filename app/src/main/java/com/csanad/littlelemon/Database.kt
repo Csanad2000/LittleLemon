@@ -60,7 +60,7 @@ interface MenuDao {
     suspend fun insertItem(item: MenuItemDatabase)
 
     @Query("SELECT * FROM menu_item_table")
-    fun getItems(): LiveData<Array<MenuItemDatabase>>
+    fun getItems(): LiveData<List<MenuItemDatabase>>
 }
 
 @Entity(tableName = "menu_item_table")
