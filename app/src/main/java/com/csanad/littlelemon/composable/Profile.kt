@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.csanad.littlelemon.Home
 import com.csanad.littlelemon.Onboarding
 import com.csanad.littlelemon.R
 import com.csanad.littlelemon.ui.theme.LittleLemonTheme
@@ -54,7 +55,7 @@ fun Profile(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = prefs.getString("firstName", "")!!,
                 onValueChange = {},
-                placeholder = { Text(text = "First name") },
+                label = { Text(text = "First name") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
@@ -63,7 +64,7 @@ fun Profile(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = prefs.getString("lastName", "")!!,
                 onValueChange = {},
-                placeholder = { Text(text = "Last name") },
+                label = { Text(text = "Last name") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
@@ -72,7 +73,7 @@ fun Profile(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = prefs.getString("emailAddress", "")!!,
                 onValueChange = {},
-                placeholder = { Text(text = "Email address") },
+                label = { Text(text = "Email address") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
@@ -83,8 +84,10 @@ fun Profile(navController: NavHostController, prefs: SharedPreferences) {
         }
         Button(
             onClick = {
-                if (prefs.edit().clear().commit())
+                if (prefs.edit().clear().commit()) {
+                    navController.popBackStack(Home.route, true)
                     navController.navigate(Onboarding.route)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

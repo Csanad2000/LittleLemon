@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.csanad.littlelemon.Home
+import com.csanad.littlelemon.Onboarding
 import com.csanad.littlelemon.R
 import com.csanad.littlelemon.ui.theme.LittleLemonTheme
 
@@ -75,7 +76,7 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = firstName,
                 onValueChange = { firstName = it },
-                placeholder = { Text(text = "First name") },
+                label = { Text(text = "First name*") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
@@ -83,7 +84,7 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = lastName,
                 onValueChange = { lastName = it },
-                placeholder = { Text(text = "Last name") },
+                label = { Text(text = "Last name*") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
@@ -91,7 +92,7 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
             TextField(
                 value = emailAddress,
                 onValueChange = { emailAddress = it },
-                placeholder = { Text(text = "Email address") },
+                label = { Text(text = "Email address*") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp),
@@ -105,8 +106,10 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
                     if (prefs.edit().putString("firstName", firstName)
                             .putString("lastName", lastName).putString("emailAddress", emailAddress)
                             .putBoolean("logged", true).commit()
-                    )
+                    ) {
+                        navController.popBackStack(Onboarding.route, true)
                         navController.navigate(Home.route)
+                    }
                 }
             },
             modifier = Modifier

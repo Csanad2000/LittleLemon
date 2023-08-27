@@ -91,22 +91,26 @@ fun Home(navController: NavHostController, database: LittleLemonDatabase) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Hero(searchPhrase: MutableState<String>) {
-
     Column(
         modifier = Modifier
             .background(Color.Green)
             .padding(20.dp)
     ) {
+        Text(text = "Little Lemon", modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp))
         Row {
-            Column(modifier = Modifier.weight(0.6f)) {
-                Text(text = "Little Lemon")
-                Text(text = "Chicago")
+            Column(
+                modifier = Modifier.weight(0.66f),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Chicago", modifier = Modifier.padding(bottom = 20.dp))
                 Text(text = "We are a family-owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.")
             }
             Image(
                 painter = painterResource(id = R.drawable.hero_image),
                 contentDescription = "Hero image",
-                modifier = Modifier.weight(0.4f)
+                modifier = Modifier.weight(0.34f)
             )
         }
         TextField(
@@ -126,11 +130,13 @@ fun MenuItems(data: List<MenuItemDatabase>) {
     var category by remember {
         mutableStateOf("")
     }
+
     val categorized = if (category.isBlank()) {
         data
     } else {
         data.filter { it.category == category }
     }
+
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
             .padding(20.dp)
