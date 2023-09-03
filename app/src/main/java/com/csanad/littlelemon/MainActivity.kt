@@ -26,7 +26,7 @@ import kotlinx.serialization.json.Json
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database= LittleLemonDatabase.getDatabase(this@MainActivity)
+        val database = LittleLemonDatabase.getDatabase(this@MainActivity)
         lifecycleScope.launch {
             val response =
                 HttpClient(Android) { install(ContentNegotiation) { json() } }.get("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
@@ -40,25 +40,13 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val prefs = getSharedPreferences("LittleLemon", MODE_PRIVATE)
-                    Navigation(navController = rememberNavController(), prefs = prefs, database = database)
+                    Navigation(
+                        navController = rememberNavController(),
+                        prefs = prefs,
+                        database = database
+                    )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LittleLemonTheme {
-        Greeting("Android")
     }
 }
