@@ -2,7 +2,6 @@ package com.csanad.littlelemon.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -16,12 +15,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -62,7 +61,7 @@ fun Home(navController: NavHostController, database: LittleLemonDatabase) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
     ) {
         Row {
             Image(
@@ -85,14 +84,18 @@ fun Home(navController: NavHostController, database: LittleLemonDatabase) {
                 alignment = Alignment.TopEnd
             )
         }
-        Hero(searchPhrase = searchPhrase)
-        MenuItems(data = (if (searchPhrase.value.isBlank()) {
-            menu.value
-        } else {
-            menu.value.filter {
-                it.title.contains(searchPhrase.value, true)
-            }
-        }))
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
+        ) {
+            Hero(searchPhrase = searchPhrase)
+            MenuItems(data = (if (searchPhrase.value.isBlank()) {
+                menu.value
+            } else {
+                menu.value.filter {
+                    it.title.contains(searchPhrase.value, true)
+                }
+            }))
+        }
     }
 }
 
@@ -152,7 +155,6 @@ fun Hero(searchPhrase: MutableState<String>) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuItems(data: List<MenuItemDatabase>) {
     var category by remember {
@@ -239,8 +241,11 @@ fun MenuItems(data: List<MenuItemDatabase>) {
             Text(text = "Drinks", fontWeight = FontWeight.ExtraBold)
         }
     }
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(categorized.size) { index -> MenuItem(item = categorized[index]) }
+    Column(modifier = Modifier
+        .fillMaxSize()) {
+        for (index in categorized.indices){
+            MenuItem(item = categorized[index])
+        }
     }
 }
 
