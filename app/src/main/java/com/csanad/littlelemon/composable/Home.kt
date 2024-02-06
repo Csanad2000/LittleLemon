@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -26,11 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +47,8 @@ import com.csanad.littlelemon.MenuItemDatabase
 import com.csanad.littlelemon.Profile
 import com.csanad.littlelemon.R
 import com.csanad.littlelemon.ui.theme.LittleLemonTheme
+import com.csanad.littlelemon.util.filterByCategory
+import com.csanad.littlelemon.util.filterBySearchPhrase
 
 @Composable
 fun Home(navController: NavHostController, database: LittleLemonDatabase) {
@@ -88,13 +87,7 @@ fun Home(navController: NavHostController, database: LittleLemonDatabase) {
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             Hero(searchPhrase = searchPhrase)
-            MenuItems(data = (if (searchPhrase.value.isBlank()) {
-                menu.value
-            } else {
-                menu.value.filter {
-                    it.title.contains(searchPhrase.value, true)
-                }
-            }))
+            MenuItems(data = filterBySearchPhrase(searchPhrase, menu))
         }
     }
 }
@@ -157,15 +150,11 @@ fun Hero(searchPhrase: MutableState<String>) {
 
 @Composable
 fun MenuItems(data: List<MenuItemDatabase>) {
-    var category by remember {
+    val category = remember {
         mutableStateOf("")
     }
-    //should this be state?
-    val categorized = if (category.isBlank()) {
-        data
-    } else {
-        data.filter { it.category == category }
-    }
+
+    val categorized = filterByCategory(category, data)
 
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier
@@ -175,7 +164,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
             .padding(20.dp)
     ) { //Chips are also an option
         Button(
-            onClick = { category = if (category == "starters") "" else "starters" },
+            onClick = { category.value = if (category.value == "starters") "" else "starters" },
             modifier = Modifier
                 .padding(end = 20.dp),
             colors = ButtonDefaults.buttonColors(
@@ -183,7 +172,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
                 contentColor = colorResource(id = R.color.little_lemon_highlight_dark)
             ), shape = RoundedCornerShape(16.dp)
         ) {
-            if (category == "starters")
+            if (category.value == "starters")
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
                     contentDescription = "Selected",
@@ -192,7 +181,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
             Text(text = "Starters", fontWeight = FontWeight.ExtraBold)
         }
         Button(
-            onClick = { category = if (category == "mains") "" else "mains" },
+            onClick = { category.value = if (category.value == "mains") "" else "mains" },
             modifier = Modifier
                 .padding(end = 20.dp),
             colors = ButtonDefaults.buttonColors(
@@ -200,7 +189,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
                 contentColor = colorResource(id = R.color.little_lemon_highlight_dark)
             ), shape = RoundedCornerShape(16.dp)
         ) {
-            if (category == "mains")
+            if (category.value == "mains")
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
                     contentDescription = "Selected",
@@ -209,7 +198,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
             Text(text = "Mains", fontWeight = FontWeight.ExtraBold)
         }
         Button(
-            onClick = { category = if (category == "desserts") "" else "desserts" },
+            onClick = { category.value = if (category.value == "desserts") "" else "desserts" },
             modifier = Modifier
                 .padding(end = 20.dp),
             colors = ButtonDefaults.buttonColors(
@@ -217,7 +206,7 @@ fun MenuItems(data: List<MenuItemDatabase>) {
                 contentColor = colorResource(id = R.color.little_lemon_highlight_dark)
             ), shape = RoundedCornerShape(16.dp)
         ) {
-            if (category == "desserts")
+            if (category.value == "desserts")
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
                     contentDescription = "Selected",
@@ -226,13 +215,13 @@ fun MenuItems(data: List<MenuItemDatabase>) {
             Text(text = "Desserts", fontWeight = FontWeight.ExtraBold)
         }
         Button(
-            onClick = { category = if (category == "drinks") "" else "drinks" },
+            onClick = { category.value = if (category.value == "drinks") "" else "drinks" },
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.little_lemon_highlight_light),
                 contentColor = colorResource(id = R.color.little_lemon_highlight_dark)
             ), shape = RoundedCornerShape(16.dp)
         ) {
-            if (category == "drinks")
+            if (category.value == "drinks")
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_check_circle_outline_24),
                     contentDescription = "Selected",

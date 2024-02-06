@@ -18,10 +18,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -41,13 +39,13 @@ import com.csanad.littlelemon.ui.theme.LittleLemonTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
-    var firstName by remember {
+    val firstName = remember {
         mutableStateOf("")
     }
-    var lastName by remember {
+    val lastName = remember {
         mutableStateOf("")
     }
-    var emailAddress by remember {
+    val emailAddress = remember {
         mutableStateOf("")
     }
     Column(
@@ -84,24 +82,24 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
                 fontWeight = FontWeight.ExtraBold
             )
             TextField(
-                value = firstName,
-                onValueChange = { firstName = it },
+                value = firstName.value,
+                onValueChange = { firstName.value = it },
                 label = { Text(text = "First name*") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
             )
             TextField(
-                value = lastName,
-                onValueChange = { lastName = it },
+                value = lastName.value,
+                onValueChange = { lastName.value = it },
                 label = { Text(text = "Last name*") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
             )
             TextField(
-                value = emailAddress,
-                onValueChange = { emailAddress = it },
+                value = emailAddress.value,
+                onValueChange = { emailAddress.value = it },
                 label = { Text(text = "Email address*") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,9 +109,9 @@ fun Onboarding(navController: NavHostController, prefs: SharedPreferences) {
         }
         Button(
             onClick = {
-                if (firstName.isNotBlank() && lastName.isNotBlank() && emailAddress.isNotBlank()) {
-                    if (prefs.edit().putString("firstName", firstName)
-                            .putString("lastName", lastName).putString("emailAddress", emailAddress)
+                if (firstName.value.isNotBlank() && lastName.value.isNotBlank() && emailAddress.value.isNotBlank()) {
+                    if (prefs.edit().putString("firstName", firstName.value)
+                            .putString("lastName", lastName.value).putString("emailAddress", emailAddress.value)
                             .putBoolean("logged", true).commit()
                     ) {
                         navController.popBackStack(Onboarding.route, true)
